@@ -1,8 +1,0 @@
-Firebase / React js with custom hooks
-
-expense tracker, 2 pages
-google auth
-
-react router dom & Firebase
-
-auth is set up in 
