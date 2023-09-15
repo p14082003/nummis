@@ -1,3 +1,7 @@
+html * {
+  border: 1px solid #eeeeee;
+}
+
 .expense-tracker {
     width: 100vw;
     display: flex;
@@ -54,4 +58,40 @@
     height: 400px;
     overflow: auto;
     border: 3px solid #023047;
+  }
+
+  .updateTransactionPopup {
+    display: block;
+    position: fixed;
+    padding: 10px;
+    width: 320px;
+    left: 50%;
+    margin-left: -150px;
+    height: 180px;
+    top: 50%;
+    margin-top: -100px;
+    background: #FFF;
+    z-index: 20;
+  }
+
+  .updateTransactionPopup:after {
+    position: fixed;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: -2;
+  }
+   
+  .updateTransactionPopup:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    z-index: -1;
   }

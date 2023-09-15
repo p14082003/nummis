@@ -6,7 +6,7 @@ import {
   orderBy,
   onSnapshot,
 } from "firebase/firestore";
-import { db } from "../config/firebase-config";
+import { currentCollection, db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
 export const useGetTransactions = () => {
@@ -17,7 +17,7 @@ export const useGetTransactions = () => {
     expenses: 0.0,
   });
 
-  const transactionCollectionRef = collection(db, "transactions");
+  const transactionCollectionRef = collection(db, currentCollection);
   const { userID } = useGetUserInfo();
 
   const getTransactions = async () => {
@@ -36,9 +36,9 @@ export const useGetTransactions = () => {
 
         snapshot.forEach((doc) => {
           const data = doc.data();
-          const id = doc.id;
+          const transactionId = doc.id;
 
-          docs.push({ ...data, id });
+          docs.push({ ...data, transactionId });
 
           if (data.transactionType === "expense") {
             totalExpenses += Number(data.transactionAmount);
