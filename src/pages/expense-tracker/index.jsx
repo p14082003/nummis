@@ -88,6 +88,8 @@ export const ExpenseTracker = () => {
           <label htmlFor="income">Ingreso</label>
         </form>
       </dialog>
+      {profilePhoto && <img src={profilePhoto}></img>}
+      <button onClick={signUserOut}>Salir</button>
       <h1>{name} • Nummis</h1>
       <h3>Dinero restante: </h3>
       {balance >= 0 ? <h2 style={{ color: "limegreen" }}>${balance} </h2> : <h2 style={{ color: "red" }}>-${balance * -1} </h2>}
@@ -129,9 +131,6 @@ export const ExpenseTracker = () => {
         <label htmlFor="income">Ingreso</label>
         <button type="submit"> Agregar Transacción</button>
       </form>
-
-      {profilePhoto && <img src={profilePhoto}></img>}
-      <button onClick={signUserOut}>Salir</button>
 
       <h3>Transacción</h3>
       <ul>
