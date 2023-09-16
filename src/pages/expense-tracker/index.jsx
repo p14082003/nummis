@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { signOut } from "firebase/auth";
@@ -9,6 +9,9 @@ import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 
 import "./styles.css";
+import { AddTransactionForm } from "../../components/AddTransactionForm";
+
+export const MainPageContext = createContext();
 
 export const ExpenseTracker = () => {
   const { addTransaction, deleteTransaction, updateTransaction } = useModifyTransaction();
@@ -25,12 +28,6 @@ export const ExpenseTracker = () => {
 
   const [addTransactionInput, setAddTransactionInput] = useState(emptyForm);
   const [addUpdateInput, setAddUpdateInput] = useState(emptyForm);
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    addTransaction(addTransactionInput);
-    setAddTransactionInput(emptyForm);
-  };
 
   const onUpdate = (e) => {
     e.preventDefault();
@@ -50,7 +47,7 @@ export const ExpenseTracker = () => {
   };
 
   return (
-    <>
+    <MainPageContext.Provider value={{ addTransactionInput, setAddTransactionInput, addTransaction }}>
       <dialog id="updateTransactionPopup">
         Edit transaction
         <form onSubmit={onUpdate}>
@@ -98,39 +95,7 @@ export const ExpenseTracker = () => {
       <h4>Gastos:</h4>
       <p>${expenses}</p>
 
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Descripción"
-          value={addTransactionInput.description}
-          required
-          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Cantidad"
-          value={addTransactionInput.transactionAmount}
-          required
-          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionAmount: e.target.value })}
-        />
-        <input
-          type="radio"
-          id="expense"
-          value="expense"
-          checked={addTransactionInput.transactionType === "expense"}
-          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
-        />
-        <label htmlFor="expense">Gasto</label>
-        <input
-          type="radio"
-          id="income"
-          value="income"
-          checked={addTransactionInput.transactionType === "income"}
-          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
-        />
-        <label htmlFor="income">Ingreso</label>
-        <button type="submit"> Agregar Transacción</button>
-      </form>
+      <AddTransactionForm />
 
       <h3>Transacción</h3>
       <ul>
@@ -160,6 +125,6 @@ export const ExpenseTracker = () => {
           );
         })}
       </ul>
-    </>
+    </MainPageContext.Provider>
   );
 };
