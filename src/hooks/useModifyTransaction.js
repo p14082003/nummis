@@ -1,19 +1,12 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
-import { currentCollection, db } from "../config/firebase-config";
+import { addDoc, collection, deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { accountsCollection, transactionCollection, db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
 export const useModifyTransaction = () => {
   const { userID } = useGetUserInfo();
 
   const addTransaction = async (addTransactionInput) => {
-    await addDoc(collection(db, currentCollection), {
+    await addDoc(collection(db, transactionCollection), {
       ...addTransactionInput,
       userID,
       createdAt: serverTimestamp(),
@@ -21,14 +14,11 @@ export const useModifyTransaction = () => {
   };
 
   const deleteTransaction = async (transactionId) => {
-    await deleteDoc(doc(db, currentCollection, transactionId));
+    await deleteDoc(doc(db, transactionCollection, transactionId));
   };
 
   const updateTransaction = async (addUpdateInput) => {
-    await updateDoc(
-      doc(db, currentCollection, addUpdateInput.transactionId),
-      addUpdateInput
-    );
+    await updateDoc(doc(db, transactionCollection, addUpdateInput.transactionId), addUpdateInput);
   };
 
   return { addTransaction, deleteTransaction, updateTransaction };

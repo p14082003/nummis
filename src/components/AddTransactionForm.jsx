@@ -1,17 +1,15 @@
-import { useContext } from "react";
-import { MainPageContext } from "../pages/expense-tracker";
+import { useState } from "react";
+import { useModifyTransaction } from "../hooks/useModifyTransaction";
+import { transactionTemplate } from "../config/firebase-config";
 
 export const AddTransactionForm = () => {
-  const { addTransactionInput, setAddTransactionInput, addTransaction } = useContext(MainPageContext);
+  const { addTransaction } = useModifyTransaction();
+  const [addTransactionInput, setAddTransactionInput] = useState(transactionTemplate);
 
   const onSubmit = (e) => {
     e.preventDefault();
     addTransaction(addTransactionInput);
-    setAddTransactionInput({
-      description: "",
-      transactionAmount: "",
-      transactionType: "expense",
-    });
+    setAddTransactionInput(transactionTemplate);
   };
 
   return (
@@ -23,6 +21,15 @@ export const AddTransactionForm = () => {
         required
         onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
       />
+
+      <input
+        type="text"
+        placeholder="Descripción"
+        value={addTransactionInput.description}
+        required
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
+      />
+
       <input
         type="number"
         placeholder="Cantidad"
@@ -30,6 +37,7 @@ export const AddTransactionForm = () => {
         required
         onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionAmount: e.target.value })}
       />
+
       <input
         type="radio"
         id="expense"
@@ -38,6 +46,7 @@ export const AddTransactionForm = () => {
         onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
       />
       <label htmlFor="expense">Gasto</label>
+
       <input
         type="radio"
         id="income"

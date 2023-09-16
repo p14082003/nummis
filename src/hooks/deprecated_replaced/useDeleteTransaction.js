@@ -1,9 +1,9 @@
 import { deleteDoc, doc } from "firebase/firestore";
-import { currentCollection, db } from "../../config/firebase-config";
+import { transactionCollection, db } from "../../config/firebase-config";
 
 export const useDeleteTransaction = () => {
   const deleteTransaction = async (transactionId) => {
-    await deleteDoc(doc(db, currentCollection, transactionId));
+    await deleteDoc(doc(db, transactionCollection, transactionId));
   };
 
   return { deleteTransaction };

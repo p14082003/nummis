@@ -20,7 +20,13 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
 export const db = getFirestore(app);
-export const currentCollection = "transactionsTEST";
+export const transactionCollection = "transactionsTEST";
+export const accountsCollection = "accounts";
+export const transactionTemplate = {
+  description: "",
+  transactionAmount: "",
+  transactionType: "expense",
+};
 
 //firebase login
 //firebase init
