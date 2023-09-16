@@ -53,7 +53,7 @@ export const ExpenseTracker = () => {
     <>
       <dialog id="updateTransactionPopup">
         Edit transaction
-        <form className="add-transaction" onSubmit={onUpdate}>
+        <form onSubmit={onUpdate}>
           <button onClick={() => document.getElementById("updateTransactionPopup").close()}>Cancel</button>
           <button type="submit">Save changes</button>
           <input
@@ -88,24 +88,24 @@ export const ExpenseTracker = () => {
           <label htmlFor="income">Ingreso</label>
         </form>
       </dialog>
-      <div className="expense-tracker">
-        <div className="container">
+      <div>
+        <div>
           <h1>{name} • Nummis</h1>
-          <div className="balance">
+          <div>
             <h3>Dinero restante: </h3>
             {balance >= 0 ? <h2 style={{ color: "limegreen" }}>${balance} </h2> : <h2 style={{ color: "red" }}>-${balance * -1} </h2>}
           </div>
-          <div className="Summary">
-            <div className="income">
+          <div>
+            <div>
               <h4>Ingresos:</h4>
               <p>${income}</p>
             </div>
-            <div className="expenses">
+            <div>
               <h4>Gastos:</h4>
               <p>${expenses}</p>
             </div>
           </div>
-          <form className="add-transaction" onSubmit={onSubmit}>
+          <form onSubmit={onSubmit}>
             <input
               type="text"
               placeholder="Descripción"
@@ -141,15 +141,13 @@ export const ExpenseTracker = () => {
           </form>
         </div>
         {profilePhoto && (
-          <div className="profile">
-            <img className="profile-photo" src={profilePhoto}></img>
-            <button className="sign-out-button" onClick={signUserOut}>
-              Salir
-            </button>
+          <div>
+            <img src={profilePhoto}></img>
+            <button onClick={signUserOut}>Salir</button>
           </div>
         )}
       </div>
-      <div className="transactions">
+      <div>
         <h3>Transacción</h3>
         <ul>
           {transactions.map((transaction) => {
