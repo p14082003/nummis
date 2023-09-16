@@ -88,97 +88,79 @@ export const ExpenseTracker = () => {
           <label htmlFor="income">Ingreso</label>
         </form>
       </dialog>
-      <div>
-        <div>
-          <h1>{name} • Nummis</h1>
-          <div>
-            <h3>Dinero restante: </h3>
-            {balance >= 0 ? <h2 style={{ color: "limegreen" }}>${balance} </h2> : <h2 style={{ color: "red" }}>-${balance * -1} </h2>}
-          </div>
-          <div>
-            <div>
-              <h4>Ingresos:</h4>
-              <p>${income}</p>
-            </div>
-            <div>
-              <h4>Gastos:</h4>
-              <p>${expenses}</p>
-            </div>
-          </div>
-          <form onSubmit={onSubmit}>
-            <input
-              type="text"
-              placeholder="Descripción"
-              value={addTransactionInput.description}
-              required
-              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
-            />
-            <input
-              type="number"
-              placeholder="Cantidad"
-              value={addTransactionInput.transactionAmount}
-              required
-              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionAmount: e.target.value })}
-            />
-            <input
-              type="radio"
-              id="expense"
-              value="expense"
-              checked={addTransactionInput.transactionType === "expense"}
-              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
-            />
-            <label htmlFor="expense">Gasto</label>
-            <input
-              type="radio"
-              id="income"
-              value="income"
-              checked={addTransactionInput.transactionType === "income"}
-              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
-            />
-            <label htmlFor="income">Ingreso</label>
+      <h1>{name} • Nummis</h1>
+      <h3>Dinero restante: </h3>
+      {balance >= 0 ? <h2 style={{ color: "limegreen" }}>${balance} </h2> : <h2 style={{ color: "red" }}>-${balance * -1} </h2>}
+      <h4>Ingresos:</h4>
+      <p>${income}</p>
+      <h4>Gastos:</h4>
+      <p>${expenses}</p>
 
-            <button type="submit"> Agregar Transacción</button>
-          </form>
-        </div>
-        {profilePhoto && (
-          <div>
-            <img src={profilePhoto}></img>
-            <button onClick={signUserOut}>Salir</button>
-          </div>
-        )}
-      </div>
-      <div>
-        <h3>Transacción</h3>
-        <ul>
-          {transactions.map((transaction) => {
-            const { description, transactionAmount, transactionType, transactionId, createdAt } = transaction;
+      <form onSubmit={onSubmit}>
+        <input
+          type="text"
+          placeholder="Descripción"
+          value={addTransactionInput.description}
+          required
+          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="Cantidad"
+          value={addTransactionInput.transactionAmount}
+          required
+          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionAmount: e.target.value })}
+        />
+        <input
+          type="radio"
+          id="expense"
+          value="expense"
+          checked={addTransactionInput.transactionType === "expense"}
+          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
+        />
+        <label htmlFor="expense">Gasto</label>
+        <input
+          type="radio"
+          id="income"
+          value="income"
+          checked={addTransactionInput.transactionType === "income"}
+          onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
+        />
+        <label htmlFor="income">Ingreso</label>
+        <button type="submit"> Agregar Transacción</button>
+      </form>
 
-            return (
-              <li key={transactionId}>
-                <h4>
-                  {description}
-                  <button onClick={() => deleteTransaction(transactionId)}>Borrar</button>
-                  <button
-                    onClick={() => {
-                      setAddUpdateInput(transaction);
-                      document.getElementById("updateTransactionPopup").showModal();
-                    }}
-                  >
-                    Editar
-                  </button>
-                </h4>
-                <p>{createdAt?.toDate().toDateString()}</p>
-                <p>
-                  ${transactionAmount} •
-                  <label style={{ color: transactionType === "expense" ? "red" : "limegreen" }}>
-                    {transactionType === "expense" ? "gasto" : "ingreso"}
-                  </label>
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      {profilePhoto && <img src={profilePhoto}></img>}
+      <button onClick={signUserOut}>Salir</button>
+
+      <h3>Transacción</h3>
+      <ul>
+        {transactions.map((transaction) => {
+          const { description, transactionAmount, transactionType, transactionId, createdAt } = transaction;
+
+          return (
+            <li key={transactionId}>
+              <h4>{description}</h4>
+              <button onClick={() => deleteTransaction(transactionId)}>Borrar</button>
+              <button
+                onClick={() => {
+                  setAddUpdateInput(transaction);
+                  document.getElementById("updateTransactionPopup").showModal();
+                }}
+              >
+                Editar
+              </button>
+              <p>{createdAt?.toDate().toDateString()}</p>
+              <p>
+                ${transactionAmount} • {""}
+                <span style={{ color: transactionType === "expense" ? "red" : "limegreen" }}>
+                  {transactionType === "expense" ? "gasto" : "ingreso"}
+                </span>
+              </p>
+            </li>
+          );
+        })}
+      </ul>
     </>
   );
 };
