@@ -24,8 +24,11 @@ export const useModifyTransaction = () => {
     await deleteDoc(doc(db, currentCollection, transactionId));
   };
 
-  const updateTransaction = async (addUpdateInput, transactionId) => {
-    await updateDoc(doc(db, currentCollection, transactionId), addUpdateInput);
+  const updateTransaction = async (addUpdateInput) => {
+    await updateDoc(
+      doc(db, currentCollection, addUpdateInput.transactionId),
+      addUpdateInput
+    );
   };
 
   return { addTransaction, deleteTransaction, updateTransaction };

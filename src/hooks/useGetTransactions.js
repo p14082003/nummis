@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  query,
-  collection,
-  where,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
+import { query, collection, where, orderBy, onSnapshot } from "firebase/firestore";
 import { currentCollection, db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
@@ -17,17 +11,12 @@ export const useGetTransactions = () => {
     expenses: 0.0,
   });
 
-  const transactionCollectionRef = collection(db, currentCollection);
   const { userID } = useGetUserInfo();
 
   const getTransactions = async () => {
     let unsuscribe;
     try {
-      const queryTransactions = query(
-        transactionCollectionRef,
-        where("userID", "==", userID),
-        orderBy("createdAt", "desc")
-      );
+      const queryTransactions = query(collection(db, currentCollection), where("userID", "==", userID), orderBy("createdAt", "desc"));
 
       unsuscribe = onSnapshot(queryTransactions, (snapshot) => {
         let docs = [];
@@ -39,21 +28,12 @@ export const useGetTransactions = () => {
           const transactionId = doc.id;
 
           docs.push({ ...data, transactionId });
-
-          if (data.transactionType === "expense") {
-            totalExpenses += Number(data.transactionAmount);
-          } else {
-            totalIncome += Number(data.transactionAmount);
-          }
+          data.transactionType === "expense" ? (totalExpenses += Number(data.transactionAmount)) : (totalIncome += Number(data.transactionAmount));
         });
 
         setTransactions(docs);
         let balance = totalIncome - totalExpenses;
-        setTransactionTotals({
-          balance,
-          expenses: totalExpenses,
-          income: totalIncome,
-        });
+        setTransactionTotals({ balance, expenses: totalExpenses, income: totalIncome });
       });
     } catch (err) {
       console.error(err);

@@ -60,8 +60,7 @@ html * {
     border: 3px solid #023047;
   }
 
-  .updateTransactionPopup {
-    display: block;
+  #updateTransactionPopup {
     position: fixed;
     padding: 10px;
     width: 320px;
@@ -74,7 +73,7 @@ html * {
     z-index: 20;
   }
 
-  .updateTransactionPopup:after {
+  #updateTransactionPopup:after {
     position: fixed;
     content: "";
     top: 0;
@@ -85,7 +84,7 @@ html * {
     z-index: -2;
   }
    
-  .updateTransactionPopup:before {
+  #updateTransactionPopup:before {
     position: absolute;
     content: "";
     top: 0;

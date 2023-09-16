@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { signOut } from "firebase/auth";
+import { auth } from "../../config/firebase-config";
+
 import { useModifyTransaction } from "../../hooks/useModifyTransaction";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 
 import "./styles.css";
-import { auth, currentCollection } from "../../config/firebase-config";
 
 export const ExpenseTracker = () => {
-  const { addTransaction, deleteTransaction, updateTransaction } =
-    useModifyTransaction();
+  const { addTransaction, deleteTransaction, updateTransaction } = useModifyTransaction();
   const { transactions, transactionTotals } = useGetTransactions();
   const { name, profilePhoto } = useGetUserInfo();
   const navigate = useNavigate();
@@ -20,13 +21,10 @@ export const ExpenseTracker = () => {
     transactionAmount: "",
     transactionType: "expense",
   };
+  const { balance, income, expenses } = transactionTotals;
 
   const [addTransactionInput, setAddTransactionInput] = useState(emptyForm);
   const [addUpdateInput, setAddUpdateInput] = useState(emptyForm);
-
-  const [editing, setEditing] = useState({ isEdit: false, id: "" });
-
-  const { balance, income, expenses } = transactionTotals;
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -36,9 +34,9 @@ export const ExpenseTracker = () => {
 
   const onUpdate = (e) => {
     e.preventDefault();
-    setEditing({ isEdit: false, id: "" });
-    updateTransaction(addUpdateInput, editing.id);
+    updateTransaction(addUpdateInput);
     setAddUpdateInput(emptyForm);
+    document.getElementById("updateTransactionPopup").close();
   };
 
   const signUserOut = async () => {
@@ -53,51 +51,31 @@ export const ExpenseTracker = () => {
 
   return (
     <>
-      <div
-        className="updateTransactionPopup"
-        style={{ display: editing.isEdit ? "block" : "none" }}
-      >
+      <dialog id="updateTransactionPopup">
         Edit transaction
         <form className="add-transaction" onSubmit={onUpdate}>
-          <button onClick={() => setEditing({ isEdit: false, id: "" })}>
-            Cancel
-          </button>
+          <button onClick={() => document.getElementById("updateTransactionPopup").close()}>Cancel</button>
           <button type="submit">Save changes</button>
           <input
             type="text"
             placeholder="Descripción"
             value={addUpdateInput.description}
             required
-            onChange={(e) =>
-              setAddUpdateInput({
-                ...addUpdateInput,
-                description: e.target.value,
-              })
-            }
+            onChange={(e) => setAddUpdateInput({ ...addUpdateInput, description: e.target.value })}
           />
           <input
             type="number"
             placeholder="Cantidad"
             value={addUpdateInput.transactionAmount}
             required
-            onChange={(e) =>
-              setAddUpdateInput({
-                ...addUpdateInput,
-                transactionAmount: e.target.value,
-              })
-            }
+            onChange={(e) => setAddUpdateInput({ ...addUpdateInput, transactionAmount: e.target.value })}
           />
           <input
             type="radio"
             id="expense"
             value="expense"
             checked={addUpdateInput.transactionType === "expense"}
-            onChange={(e) =>
-              setAddUpdateInput({
-                ...addUpdateInput,
-                transactionType: e.target.value,
-              })
-            }
+            onChange={(e) => setAddUpdateInput({ ...addUpdateInput, transactionType: e.target.value })}
           />
           <label htmlFor="expense">Gasto</label>
           <input
@@ -105,22 +83,17 @@ export const ExpenseTracker = () => {
             id="income"
             value="income"
             checked={addUpdateInput.transactionType === "income"}
-            onChange={(e) =>
-              setAddUpdateInput({
-                ...addUpdateInput,
-                transactionType: e.target.value,
-              })
-            }
+            onChange={(e) => setAddUpdateInput({ ...addUpdateInput, transactionType: e.target.value })}
           />
           <label htmlFor="income">Ingreso</label>
         </form>
-      </div>
+      </dialog>
       <div className="expense-tracker">
         <div className="container">
           <h1>{name} • Nummis</h1>
           <div className="balance">
             <h3>Dinero restante: </h3>
-            {balance >= 0 ? <h2>${balance} </h2> : <h2>-${balance * -1} </h2>}
+            {balance >= 0 ? <h2 style={{ color: "limegreen" }}>${balance} </h2> : <h2 style={{ color: "red" }}>-${balance * -1} </h2>}
           </div>
           <div className="Summary">
             <div className="income">
@@ -138,36 +111,21 @@ export const ExpenseTracker = () => {
               placeholder="Descripción"
               value={addTransactionInput.description}
               required
-              onChange={(e) =>
-                setAddTransactionInput({
-                  ...addTransactionInput,
-                  description: e.target.value,
-                })
-              }
+              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
             />
             <input
               type="number"
               placeholder="Cantidad"
               value={addTransactionInput.transactionAmount}
               required
-              onChange={(e) =>
-                setAddTransactionInput({
-                  ...addTransactionInput,
-                  transactionAmount: e.target.value,
-                })
-              }
+              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionAmount: e.target.value })}
             />
             <input
               type="radio"
               id="expense"
               value="expense"
               checked={addTransactionInput.transactionType === "expense"}
-              onChange={(e) =>
-                setAddTransactionInput({
-                  ...addTransactionInput,
-                  transactionType: e.target.value,
-                })
-              }
+              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
             />
             <label htmlFor="expense">Gasto</label>
             <input
@@ -175,12 +133,7 @@ export const ExpenseTracker = () => {
               id="income"
               value="income"
               checked={addTransactionInput.transactionType === "income"}
-              onChange={(e) =>
-                setAddTransactionInput({
-                  ...addTransactionInput,
-                  transactionType: e.target.value,
-                })
-              }
+              onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
             />
             <label htmlFor="income">Ingreso</label>
 
@@ -198,31 +151,19 @@ export const ExpenseTracker = () => {
       </div>
       <div className="transactions">
         <h3>Transacción</h3>
-        <p>DELETE - DB: {currentCollection}</p>
         <ul>
           {transactions.map((transaction) => {
-            const {
-              description,
-              transactionAmount,
-              transactionType,
-              transactionId,
-              createdAt,
-            } = transaction;
+            const { description, transactionAmount, transactionType, transactionId, createdAt } = transaction;
 
             return (
               <li key={transactionId}>
                 <h4>
                   {description}
+                  <button onClick={() => deleteTransaction(transactionId)}>Borrar</button>
                   <button
                     onClick={() => {
-                      deleteTransaction(transactionId);
-                    }}
-                  >
-                    Borrar
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditing({ isEdit: true, id: transactionId });
+                      setAddUpdateInput(transaction);
+                      document.getElementById("updateTransactionPopup").showModal();
                     }}
                   >
                     Editar
@@ -231,11 +172,7 @@ export const ExpenseTracker = () => {
                 <p>{createdAt?.toDate().toDateString()}</p>
                 <p>
                   ${transactionAmount} •
-                  <label
-                    style={{
-                      color: transactionType === "expense" ? "red" : "green",
-                    }}
-                  >
+                  <label style={{ color: transactionType === "expense" ? "red" : "limegreen" }}>
                     {transactionType === "expense" ? "gasto" : "ingreso"}
                   </label>
                 </p>
