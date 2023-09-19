@@ -19,8 +19,6 @@ export const TransactionList = () => {
           const { description, amount, trType, transactionId, accountId, date } = transaction;
           const accountName = accounts.find((account) => account.accountId === accountId).name;
 
-          console.log();
-
           return (
             <li key={transactionId}>
               <h4>{description}</h4>

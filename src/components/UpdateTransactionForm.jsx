@@ -76,7 +76,6 @@ export const UpdateTransactionForm = () => {
         <button
           onClick={() => {
             document.getElementById("updateTransactionPopup").close();
-            console.log(accounts);
           }}
         >
           Cancelar
