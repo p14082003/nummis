@@ -1,58 +1,87 @@
 import { useContext } from "react";
 import { useModifyTransaction } from "../hooks/useModifyTransaction";
-import { MainPageContext } from "../pages/expense-tracker";
+import { useGetAccounts } from "../hooks/useGetAccounts";
 import { transactionTemplate } from "../config/firebase-config";
+import { ExpensePageContext } from "../pages/expense-page";
 
 export const UpdateTransactionForm = () => {
-  const { addUpdateInput, setAddUpdateInput } = useContext(MainPageContext);
+  const { updateTransactionInput, setUpdateTransactionInput } = useContext(ExpensePageContext);
   const { updateTransaction } = useModifyTransaction();
+  const { accounts } = useGetAccounts();
 
   const onSubmit = (e) => {
     e.preventDefault();
-    updateTransaction(addUpdateInput);
-    setAddUpdateInput(transactionTemplate);
+    updateTransaction(updateTransactionInput);
+    setUpdateTransactionInput(transactionTemplate);
     document.getElementById("updateTransactionPopup").close();
   };
 
   return (
-    <dialog id="updateTransactionPopup">
+    <dialog id="updateTransactionPopup" className="container">
       Edit transaction
-      <form onSubmit={onSubmit}>
-        <button onClick={() => document.getElementById("updateTransactionPopup").close()}>Cancel</button>
-        <button type="submit">Save changes</button>
+      <form onSubmit={onSubmit} autoComplete="off">
+        <input
+          id="date"
+          type="date"
+          defaultValue={updateTransactionInput.date}
+          required
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, date: e.target.value })}
+        />
+
+        <select
+          id="account"
+          value={updateTransactionInput.accountId}
+          required
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, accountId: e.target.value })}
+        >
+          {accounts.map((account) => {
+            return <option value={account.accountId}>{account.name}</option>;
+          })}
+        </select>
+
         <input
           type="text"
           placeholder="Descripción"
-          value={addUpdateInput.description}
+          value={updateTransactionInput.description}
           required
-          onChange={(e) => setAddUpdateInput({ ...addUpdateInput, description: e.target.value })}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, description: e.target.value })}
         />
 
         <input
           type="number"
           placeholder="Cantidad"
-          value={addUpdateInput.transactionAmount}
+          value={updateTransactionInput.amount}
           required
-          onChange={(e) => setAddUpdateInput({ ...addUpdateInput, transactionAmount: e.target.value })}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, amount: e.target.value })}
         />
 
         <input
           type="radio"
-          id="expense"
+          id="update-expense"
           value="expense"
-          checked={addUpdateInput.transactionType === "expense"}
-          onChange={(e) => setAddUpdateInput({ ...addUpdateInput, transactionType: e.target.value })}
+          checked={updateTransactionInput.trType === "expense"}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value })}
         />
-        <label htmlFor="expense">Gasto</label>
+        <label htmlFor="update-expense">Gasto</label>
 
         <input
           type="radio"
-          id="income"
+          id="update-income"
           value="income"
-          checked={addUpdateInput.transactionType === "income"}
-          onChange={(e) => setAddUpdateInput({ ...addUpdateInput, transactionType: e.target.value })}
+          checked={updateTransactionInput.trType === "income"}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value })}
         />
-        <label htmlFor="income">Ingreso</label>
+        <label htmlFor="update-income">Ingreso</label>
+
+        <button
+          onClick={() => {
+            document.getElementById("updateTransactionPopup").close();
+            console.log(accounts);
+          }}
+        >
+          Cancelar
+        </button>
+        <button type="submit">Guardar cambios</button>
       </form>
     </dialog>
   );

@@ -24,10 +24,10 @@ export const transactionCollection = "transactionsTEST";
 export const accountsCollection = "accounts";
 export const transactionTemplate = {
   description: "",
-  transactionAmount: "",
-  transactionType: "expense",
+  amount: "",
+  trType: "expense",
 };
-
-//firebase login
-//firebase init
-//firebase deploy
+export const accountTemplate = {
+  name: "",
+  color: "#000000",
+};

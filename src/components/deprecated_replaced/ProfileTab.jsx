@@ -1,10 +1,10 @@
-import { signOut } from "firebase/auth";
-import { useGetUserInfo } from "../hooks/useGetUserInfo";
-import { auth } from "../config/firebase-config";
 import { useNavigate } from "react-router-dom";
+import { useGetUserInfo } from "../../hooks/useGetUserInfo";
+import { signOut } from "firebase/auth";
+import { auth } from "../../config/firebase-config";
 
 export const ProfileTab = () => {
-  const { name, profilePhoto, isAuth } = useGetUserInfo();
+  const { name, profilePhoto } = useGetUserInfo();
   const navigate = useNavigate();
 
   const signUserOut = async () => {
@@ -17,19 +17,11 @@ export const ProfileTab = () => {
     }
   };
 
-  if (!isAuth)
-    return (
-      <>
-        <p>session expired!</p>
-        <button onClick={() => navigate("/")}>Login</button>
-      </>
-    );
-
   return (
-    <>
+    <div className="container" style={{ border: "3px solid #00ff00" }}>
       {profilePhoto && <img src={profilePhoto}></img>}
       <button onClick={signUserOut}>Salir</button>
       <h1>{name} • Nummis</h1>
-    </>
+    </div>
   );
 };

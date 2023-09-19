@@ -1,20 +1,41 @@
 import { useState } from "react";
 import { useModifyTransaction } from "../hooks/useModifyTransaction";
+import { useGetAccounts } from "../hooks/useGetAccounts";
 import { transactionTemplate } from "../config/firebase-config";
 
 export const AddTransactionForm = () => {
+  const today = new Date().toISOString().split("T")[0];
   const { addTransaction } = useModifyTransaction();
-  const [addTransactionInput, setAddTransactionInput] = useState(transactionTemplate);
+  const [addTransactionInput, setAddTransactionInput] = useState({ ...transactionTemplate, date: today });
+  const { accounts } = useGetAccounts();
 
   const onSubmit = (e) => {
     e.preventDefault();
     addTransaction(addTransactionInput);
-    setAddTransactionInput(transactionTemplate);
+    setAddTransactionInput({ ...transactionTemplate, accountId: addTransactionInput.accountId, date: addTransactionInput.date });
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} autoComplete="off" className="container">
       <input
+        id="date"
+        type="date"
+        defaultValue={today}
+        required
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, date: e.target.value })}
+      />
+
+      <select id="accountId" required onChange={(e) => setAddTransactionInput({ ...addTransactionInput, accountId: e.target.value })}>
+        <option value="" disabled selected hidden>
+          Elegir una cuenta
+        </option>
+        {accounts.map((account) => {
+          return <option value={account.accountId}>{account.name}</option>;
+        })}
+      </select>
+
+      <input
+        id="description"
         type="text"
         placeholder="Descripción"
         value={addTransactionInput.description}
@@ -23,38 +44,31 @@ export const AddTransactionForm = () => {
       />
 
       <input
-        type="text"
-        placeholder="Descripción"
-        value={addTransactionInput.description}
-        required
-        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, description: e.target.value })}
-      />
-
-      <input
+        id="amount"
         type="number"
         placeholder="Cantidad"
-        value={addTransactionInput.transactionAmount}
+        value={addTransactionInput.amount}
         required
-        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionAmount: e.target.value })}
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, amount: e.target.value })}
       />
 
       <input
         type="radio"
-        id="expense"
+        id="add-expense"
         value="expense"
-        checked={addTransactionInput.transactionType === "expense"}
-        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
+        checked={addTransactionInput.trType === "expense"}
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value })}
       />
-      <label htmlFor="expense">Gasto</label>
+      <label htmlFor="add-expense">Gasto</label>
 
       <input
         type="radio"
-        id="income"
+        id="add-income"
         value="income"
-        checked={addTransactionInput.transactionType === "income"}
-        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, transactionType: e.target.value })}
+        checked={addTransactionInput.trType === "income"}
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value })}
       />
-      <label htmlFor="income">Ingreso</label>
+      <label htmlFor="add-income">Ingreso</label>
       <button type="submit"> Agregar Transacción</button>
     </form>
   );

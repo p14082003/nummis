@@ -3,6 +3,7 @@ import { signInWithPopup } from "firebase/auth";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import "./styles.css";
+import { useEffect } from "react";
 
 export const Auth = () => {
   const navigate = useNavigate();
@@ -17,19 +18,17 @@ export const Auth = () => {
       isAuth: true,
     };
     localStorage.setItem("auth", JSON.stringify(authInfo));
-    navigate("/expense-tracker");
+    navigate("/expense-page");
   };
 
-  if (isAuth) {
-    return <Navigate to="/expense-tracker" />;
-  }
+  useEffect(() => {
+    if (isAuth) navigate("/expense-page");
+  }, []);
 
   return (
-    <div className="login-page">
+    <div>
       <p>Ingresar con Google</p>
-      <button className="login-with-google-btn" onClick={signInWithGoogle}>
-        Ingresar con Google
-      </button>
+      <button onClick={signInWithGoogle}>Ingresar con Google</button>
     </div>
   );
 };

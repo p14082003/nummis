@@ -16,7 +16,12 @@ export const useGetTransactions = () => {
   const getTransactions = async () => {
     let unsuscribe;
     try {
-      const queryTransactions = query(collection(db, transactionCollection), where("userID", "==", userID), orderBy("createdAt", "desc"));
+      const queryTransactions = query(
+        collection(db, transactionCollection),
+        where("userID", "==", userID),
+        orderBy("date", "desc"),
+        orderBy("createdAt", "desc")
+      );
 
       unsuscribe = onSnapshot(queryTransactions, (snapshot) => {
         let docs = [];
@@ -28,7 +33,7 @@ export const useGetTransactions = () => {
           const transactionId = doc.id;
 
           docs.push({ ...data, transactionId });
-          data.transactionType === "expense" ? (totalExpenses += Number(data.transactionAmount)) : (totalIncome += Number(data.transactionAmount));
+          data.trType === "expense" ? (totalExpenses += Number(data.amount)) : (totalIncome += Number(data.amount));
         });
 
         setTransactions(docs);

@@ -1,5 +1,5 @@
 import { addDoc, collection, deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { accountsCollection, transactionCollection, db } from "../config/firebase-config";
+import { transactionCollection, db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
 export const useModifyTransaction = () => {
@@ -17,8 +17,8 @@ export const useModifyTransaction = () => {
     await deleteDoc(doc(db, transactionCollection, transactionId));
   };
 
-  const updateTransaction = async (addUpdateInput) => {
-    await updateDoc(doc(db, transactionCollection, addUpdateInput.transactionId), addUpdateInput);
+  const updateTransaction = async (updateTransactionInput) => {
+    await updateDoc(doc(db, transactionCollection, updateTransactionInput.transactionId), updateTransactionInput);
   };
 
   return { addTransaction, deleteTransaction, updateTransaction };
