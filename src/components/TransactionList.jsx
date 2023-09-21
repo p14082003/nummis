@@ -18,12 +18,14 @@ export const TransactionList = () => {
       <ul>
         {transactions.map((transaction) => {
           const fromAccount = accounts.find((account) => account.accountId === transaction.accountId) ?? { name: "cuenta eliminada" };
-          const toAccount = accounts.find((account) => account.accountId === transaction.toAccountId) ?? { name: "cuenta eliminada" };
+          const toAccount = accounts.find((account) => account.accountId === transaction.toAccountId);
 
           const { description, amount, trType, transactionId, date } = transaction;
 
+          if (!toAccount && trType === "transfer") toAccount = { name: "cuenta eliminada" };
+
           return (
-            <li key={transactionId}>
+            <li key={transactionId} style={{ maxHeight: "20em" }}>
               <h4>{description}</h4>
               <button onClick={() => deleteTransaction(transactionId)}>Borrar</button>
               <button

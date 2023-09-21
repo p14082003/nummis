@@ -6,6 +6,5 @@ export const toDdMmYyyy = (date) => {
     day: "2-digit",
     timeZone: "UTC",
   });
-  console.log(date, today, typeof date, typeof today);
   return <span style={{ color: date <= today ? "forestgreen" : "blue" }}>{formatted}</span>;
 };
