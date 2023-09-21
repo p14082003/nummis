@@ -4,6 +4,7 @@ import { Auth } from "./pages/auth/index";
 import { ExpensePage } from "./pages/expense-page/index";
 import { AccountPage } from "./pages/account-page/index";
 import { Nav } from "./components/Nav";
+import { OverviewPage } from "./pages/overview-page";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" exact element={<Auth />} />
           <Route path="/expense-page" exact element={<ExpensePage />} />
           <Route path="/account-page" exact element={<AccountPage />} />
+          <Route path="/overview-page" exact element={<OverviewPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

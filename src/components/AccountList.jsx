@@ -16,7 +16,7 @@ export const AccountList = () => {
           const { accountId, name, color } = account;
 
           return (
-            <li key={accountId}>
+            <li key={accountId} className="subcontainer">
               <h4 style={{ color }}>{name}</h4>
               <p>Id: {accountId}</p>
               <button onClick={() => deleteAccount(accountId)}>Borrar</button>

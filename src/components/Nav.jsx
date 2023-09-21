@@ -24,6 +24,7 @@ export const Nav = () => {
           {profilePhoto && <img src={profilePhoto}></img>}
           <button onClick={signUserOut}>Salir</button>
           <Link to="/expense-page">Transacciones</Link>
+          <Link to="/overview-page">Resumen de cuenta</Link>
           <Link to="/account-page">Cuentas</Link>
           <h1>{name} • Nummis</h1>
         </>
