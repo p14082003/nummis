@@ -4,6 +4,7 @@ import { useGetTransactions } from "../hooks/useGetTransactions";
 import { useGetAccounts } from "../hooks/useGetAccounts";
 import { ExpensePageContext } from "../pages/expense-page";
 import { toDdMmYyyy } from "../helpers/dateFormatHelper";
+import { moneyFormat } from "../helpers/moneyFormatHelper";
 
 export const TransactionList = () => {
   const { setUpdateTransactionInput } = useContext(ExpensePageContext);
@@ -16,8 +17,10 @@ export const TransactionList = () => {
       <h3>Transacciones</h3>
       <ul>
         {transactions.map((transaction) => {
-          const { description, amount, trType, transactionId, accountId, date } = transaction;
-          const accountName = accounts.find((account) => account.accountId === accountId).name;
+          const fromAccount = accounts.find((account) => account.accountId === transaction.accountId) ?? { name: "cuenta eliminada" };
+          const toAccount = accounts.find((account) => account.accountId === transaction.toAccountId) ?? { name: "cuenta eliminada" };
+
+          const { description, amount, trType, transactionId, date } = transaction;
 
           return (
             <li key={transactionId}>
@@ -32,11 +35,20 @@ export const TransactionList = () => {
                 Editar
               </button>
               <p>{toDdMmYyyy(date)}</p>
-              <p>Account: {accountName}</p>
-              <p>Id: {accountId}</p>
               <p>
-                ${amount} • {""}
-                <span style={{ color: trType === "expense" ? "red" : "limegreen" }}>{trType === "expense" ? "gasto" : "ingreso"}</span>
+                Cuenta: <span style={{ color: fromAccount.color }}>{fromAccount.name}</span>
+                {toAccount && (
+                  <span>
+                    A la cuenta: <span style={{ color: toAccount?.color }}>{toAccount?.name}</span>
+                  </span>
+                )}
+              </p>
+              <p>Id: {transactionId}</p>
+              <p>
+                {moneyFormat(amount)} {"•"}
+                {(trType === "expense" && <span style={{ color: "red" }}>gasto</span>) ||
+                  (trType === "income" && <span style={{ color: "forestgreen" }}>ingreso</span>) ||
+                  (trType === "transfer" && <span style={{ color: "orange" }}>transferencia</span>)}
               </p>
             </li>
           );

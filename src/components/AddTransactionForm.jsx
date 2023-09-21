@@ -30,7 +30,7 @@ export const AddTransactionForm = () => {
           Elegir una cuenta
         </option>
         {accounts.map((account) => {
-          return <option value={account.accountId}>{account.name}</option>;
+          return account.accountId !== addTransactionInput.toAccountId && <option value={account.accountId}>{account.name}</option>;
         })}
       </select>
 
@@ -57,7 +57,7 @@ export const AddTransactionForm = () => {
         id="add-expense"
         value="expense"
         checked={addTransactionInput.trType === "expense"}
-        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value })}
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value, toAccountId: "" })}
       />
       <label htmlFor="add-expense">Gasto</label>
 
@@ -66,9 +66,38 @@ export const AddTransactionForm = () => {
         id="add-income"
         value="income"
         checked={addTransactionInput.trType === "income"}
-        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value })}
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value, toAccountId: "" })}
       />
       <label htmlFor="add-income">Ingreso</label>
+      {/* FROM HERE */}
+      <input
+        type="radio"
+        id="add-transfer"
+        value="transfer"
+        checked={addTransactionInput.trType === "transfer"}
+        onChange={(e) => setAddTransactionInput({ ...addTransactionInput, trType: e.target.value })}
+      />
+      <label htmlFor="add-transfer">Transferencia</label>
+
+      {addTransactionInput.trType == "transfer" && (
+        <>
+          <select
+            id="toAccount"
+            required
+            onChange={(e) =>
+              addTransactionInput.trType == "transfer" && setAddTransactionInput({ ...addTransactionInput, toAccountId: e.target.value })
+            }
+          >
+            <option value="" disabled selected hidden>
+              Elegir una cuenta
+            </option>
+            {accounts.map((account) => {
+              return account.accountId !== addTransactionInput.accountId && <option value={account.accountId}>{account.name}</option>;
+            })}
+          </select>
+        </>
+      )}
+
       <button type="submit"> Agregar Transacción</button>
     </form>
   );

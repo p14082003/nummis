@@ -30,9 +30,9 @@ export const ExpensePage = () => {
   return (
     <ExpensePageContext.Provider value={{ updateTransactionInput, setUpdateTransactionInput }}>
       <UpdateTransactionForm /> {/*uses { updateTransactionInput, setUpdateTransactionInput }*/}
-      <BalanceSummary />
       <AddTransactionForm />
       <TransactionList />
+      <BalanceSummary />
     </ExpensePageContext.Provider>
   );
 };

@@ -35,7 +35,7 @@ export const UpdateTransactionForm = () => {
           onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, accountId: e.target.value })}
         >
           {accounts.map((account) => {
-            return <option value={account.accountId}>{account.name}</option>;
+            return account.accountId !== updateTransactionInput.toAccountId && <option value={account.accountId}>{account.name}</option>;
           })}
         </select>
 
@@ -60,7 +60,7 @@ export const UpdateTransactionForm = () => {
           id="update-expense"
           value="expense"
           checked={updateTransactionInput.trType === "expense"}
-          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value })}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value, toAccountId: "" })}
         />
         <label htmlFor="update-expense">Gasto</label>
 
@@ -69,9 +69,38 @@ export const UpdateTransactionForm = () => {
           id="update-income"
           value="income"
           checked={updateTransactionInput.trType === "income"}
-          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value })}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value, toAccountId: "" })}
         />
         <label htmlFor="update-income">Ingreso</label>
+
+        <input
+          type="radio"
+          id="update-transfer"
+          value="transfer"
+          checked={updateTransactionInput.trType === "transfer"}
+          onChange={(e) => setUpdateTransactionInput({ ...updateTransactionInput, trType: e.target.value })}
+        />
+        <label htmlFor="update-transfer">Transferencia</label>
+
+        {updateTransactionInput.trType == "transfer" && (
+          <>
+            <select
+              id="toAccount"
+              value={updateTransactionInput.toAccountId}
+              required
+              onChange={(e) =>
+                updateTransactionInput.trType == "transfer" && setUpdateTransactionInput({ ...updateTransactionInput, toAccountId: e.target.value })
+              }
+            >
+              <option value="" disabled selected hidden>
+                Elegir una cuenta
+              </option>
+              {accounts.map((account) => {
+                return account.accountId !== updateTransactionInput.accountId && <option value={account.accountId}>{account.name}</option>;
+              })}
+            </select>
+          </>
+        )}
 
         <button
           onClick={() => {

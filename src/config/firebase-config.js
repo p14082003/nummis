@@ -26,6 +26,7 @@ export const transactionTemplate = {
   description: "",
   amount: "",
   trType: "expense",
+  toAccountId: "",
 };
 export const accountTemplate = {
   name: "",

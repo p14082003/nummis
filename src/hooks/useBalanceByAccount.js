@@ -10,18 +10,23 @@ export const useBalanceByAccount = () => {
     let accountExpenses = 0;
     let accountIncome = 0;
     let accountBalance = 0;
+    let transfersFrom = 0;
+    let transfersTo = 0;
+
     transactions.forEach((transaction) => {
-      if (account.accountId == transaction.accountId) {
-        if (transaction.trType === "expense") {
-          accountExpenses += Number(transaction.amount);
-        } else {
-          accountIncome += Number(transaction.amount);
-        }
-        accountBalance = accountIncome - accountExpenses;
+      if (account.accountId === transaction.accountId) {
+        transaction.trType === "income" && (accountBalance += Number(transaction.amount));
+        transaction.trType === "expense" && (accountBalance -= Number(transaction.amount));
+        accountBalance += accountIncome - accountExpenses;
+      }
+      if (transaction.trType === "transfer") {
+        account.accountId === transaction.accountId && (transfersTo += Number(transaction.amount));
+        account.accountId === transaction.toAccountId && (transfersFrom += Number(transaction.amount));
+        accountBalance += transfersFrom - transfersTo;
       }
     });
 
-    balanceByAccount.push({ id: account.accountId, name: account.name, accountExpenses, accountIncome, accountBalance });
+    balanceByAccount.push({ ...account, accountExpenses, accountIncome, accountBalance, transfersTo, transfersFrom });
   });
 
   return { balanceByAccount };
