@@ -26,7 +26,7 @@ export const Nav = () => {
           <Link to="/expense-page">Transacciones</Link>
           <Link to="/overview-page">Resumen de cuenta</Link>
           <Link to="/account-page">Cuentas</Link>
-          <h1>{name} • Nummis</h1>
+          <h1 className="">{name} • Nummis</h1>
         </>
       )}
     </div>

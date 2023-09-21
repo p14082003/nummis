@@ -1,4 +1,4 @@
-import "./App.css";
+import "./index.css";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { Auth } from "./pages/auth/index";
 import { ExpensePage } from "./pages/expense-page/index";
